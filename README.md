@@ -8,8 +8,12 @@ This version utilises the CrossRef API (a free and open-source platform for scie
 Install dependencies:
 
 bash
+
 pip install streamlit requests
+
 pip install streamlit openai requests python-dateutil
+
+pip install openai
 
 
 Feature	Description
