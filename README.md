@@ -15,6 +15,8 @@ pip install streamlit openai requests python-dateutil
 
 pip install openai
 
+pip install openai==0.28
+
 
 Feature	Description
 🎯 Keyword Search	Still powered by CrossRef API
