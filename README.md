@@ -24,3 +24,18 @@ Feature	Description
 🧬 Filters	Year range, open-access-only, and journal filter
 🧠 AI Summarization	Uses OpenAI’s GPT to summarize abstracts in plain English
 
+
+Access the web app: https://biomedical-and-bioinformatics-research-paper-search-with-ai-su.streamlit.app/
+
+
+
+<img width="1914" height="960" alt="Screenshot 2025-07-12 221152" src="https://github.com/user-attachments/assets/89d070a9-dc8e-4293-b378-93b0bb7aea3f" />
+
+
+
+
+
+
+https://www.youtube.com/@Bioinformatics_Made_Easy
+
+
