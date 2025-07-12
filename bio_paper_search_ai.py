@@ -2,29 +2,26 @@ import streamlit as st
 import requests
 from dateutil import parser as date_parser
 import datetime
-import openai
-import os
+from openai import OpenAI
 
-# --- Configuration ---
+# --- Page Setup ---
 st.set_page_config(page_title="Bioinformatics Paper Search", layout="wide")
 st.title("🔬 Bioinformatics Research Paper Search with AI Summaries")
 
-# --- API Key Input ---
+# --- Sidebar: API Key and Filters ---
 openai_api_key = st.sidebar.text_input("🔑 OpenAI API Key", type="password")
-if openai_api_key:
-    openai.api_key = openai_api_key
+client = OpenAI(api_key=openai_api_key) if openai_api_key else None
 
-# --- Search Input ---
-query = st.text_input("Enter keywords", placeholder="e.g., gene expression, RNA-seq")
-
-# --- Filters ---
 st.sidebar.header("🧬 Filters")
 open_access_only = st.sidebar.checkbox("Open Access only", value=False)
 journal_filter = st.sidebar.text_input("Journal name filter (optional)")
 start_year = st.sidebar.number_input("Start year", min_value=1900, max_value=datetime.datetime.now().year, value=2015)
 end_year = st.sidebar.number_input("End year", min_value=1900, max_value=datetime.datetime.now().year, value=datetime.datetime.now().year)
 
-# --- Helper: Call CrossRef API ---
+# --- Search Query ---
+query = st.text_input("Enter keywords", placeholder="e.g., gene expression, RNA-seq")
+
+# --- CrossRef Search ---
 def search_papers(keyword, rows=10):
     url = "https://api.crossref.org/works"
     filters = ["type:journal-article"]
@@ -53,9 +50,9 @@ def search_papers(keyword, rows=10):
         st.error(f"API error: {e}")
         return []
 
-# --- Helper: GPT Abstract Summarization ---
+# --- Summarization via OpenAI Chat Completion ---
 def summarize_abstract(abstract):
-    if not abstract or not openai_api_key:
+    if not abstract or not client:
         return "No abstract or API key provided."
 
     prompt = (
@@ -64,8 +61,8 @@ def summarize_abstract(abstract):
     )
 
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # ✅ Updated model
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are an expert in bioinformatics."},
                 {"role": "user", "content": prompt}
@@ -73,11 +70,11 @@ def summarize_abstract(abstract):
             temperature=0.5,
             max_tokens=200
         )
-        return response['choices'][0]['message']['content'].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         return f"⚠️ Error summarizing: {e}"
 
-# --- Search Button ---
+# --- Search Trigger ---
 if st.button("🔍 Search") and query:
     with st.spinner("Searching..."):
         results = search_papers(query, rows=10)
@@ -105,7 +102,7 @@ if st.button("🔍 Search") and query:
                     st.markdown("**Abstract:**")
                     st.markdown(abstract)
 
-                    if openai_api_key:
+                    if client:
                         with st.spinner("Generating AI summary..."):
                             summary = summarize_abstract(abstract)
                         st.markdown("**🔎 AI Summary:**")
@@ -120,3 +117,4 @@ if st.button("🔍 Search") and query:
 # --- Footer ---
 st.markdown("---")
 st.caption("Powered by CrossRef API + OpenAI GPT · By 🤖 Future Omics · 🤖Bioinformatics made easy ❤️ using Streamlit")
+
