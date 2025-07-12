@@ -17,6 +17,7 @@ pip install openai
 
 pip install openai==0.28
 
+pip install --upgrade openai
 
 Feature	Description
 🎯 Keyword Search	Still powered by CrossRef API
