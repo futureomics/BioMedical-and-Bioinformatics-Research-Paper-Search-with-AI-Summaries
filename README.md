@@ -9,6 +9,8 @@ Install dependencies:
 
 bash
 pip install streamlit requests
+pip install streamlit openai requests python-dateutil
+
 
 Feature	Description
 🎯 Keyword Search	Still powered by CrossRef API
