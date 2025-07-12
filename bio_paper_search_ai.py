@@ -7,7 +7,7 @@ import os
 
 # --- Configuration ---
 st.set_page_config(page_title="Bioinformatics Paper Search", layout="wide")
-st.title("🔬 BioMedical and Bioinformatics Research Paper Search with AI Summaries")
+st.title("🔬 Bioinformatics Research Paper Search with AI Summaries")
 
 # --- API Key Input ---
 openai_api_key = st.sidebar.text_input("🔑 OpenAI API Key", type="password")
@@ -65,7 +65,7 @@ def summarize_abstract(abstract):
 
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",  # ✅ Updated model
             messages=[
                 {"role": "system", "content": "You are an expert in bioinformatics."},
                 {"role": "user", "content": prompt}
@@ -120,4 +120,3 @@ if st.button("🔍 Search") and query:
 # --- Footer ---
 st.markdown("---")
 st.caption("Powered by CrossRef API + OpenAI GPT · By 🤖 Future Omics · 🤖Bioinformatics made easy ❤️ using Streamlit")
-
